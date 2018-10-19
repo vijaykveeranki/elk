@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker stack rm elastic
+docker stack rm elastic filebeat metricbeat

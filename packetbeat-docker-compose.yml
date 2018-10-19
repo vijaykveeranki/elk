@@ -1,14 +1,15 @@
-version: "3.6"
+version: "3.3"
 
 services:
 
   packetbeat:
     image: docker.elastic.co/beats/packetbeat:${ELASTIC_VERSION:-6.3.2}
     # https://github.com/docker/swarmkit/issues/1951
-    hostname: "{{.Node.Hostname}}-packetbeat"
+    hostname: packetbeat
     user: root
     networks:
       - elastic
+      # - host
     configs:
       - source: pb_config
         target: /usr/share/packetbeat/packetbeat.yml
@@ -16,8 +17,10 @@ services:
       - packetbeat:/usr/share/packetbeat/data
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-node1}
-      - KIBANA_HOST=${KIBANA_HOST:-node1}
+      - ELASTICSEARCH_HOST=elasticsearch
+      - KIBANA_HOST=kibana
+        #- ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-node1}
+        #- KIBANA_HOST=${KIBANA_HOST:-node1}
     command: ["--strict.perms=false"]
     deploy:
       mode: global
@@ -25,11 +28,11 @@ services:
 networks:
   elastic:
     external: true
-    name: host
+    # name: host
 
 volumes:
   packetbeat:
 
 configs:
   pb_config:
-    file: $PWD/elk/beats/packetbeat/config/packetbeat.yml
+    file: ./elk/beats/packetbeat/config/packetbeat.yml

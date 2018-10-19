@@ -1,4 +1,4 @@
-version: "3.6"
+version: "3.3"
 
 services:
 
@@ -19,8 +19,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - metricbeat:/usr/share/metricbeat/data
     environment:
-      - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-node1}
-      - KIBANA_HOST=${KIBANA_HOST:-node1}
+      - ELASTICSEARCH_HOST=elasticsearch
+      - KIBANA_HOST=kibana
+      # - ELASTICSEARCH_HOST=${ELASTICSEARCH_HOST:-node1}
+      # - KIBANA_HOST=${KIBANA_HOST:-node1}
     # disable strict permission checks
     command: ["--strict.perms=false", "-system.hostfs=/hostfs"]
     deploy:
@@ -35,4 +37,4 @@ volumes:
 
 configs:
   mb_config:
-    file: $PWD/elk/beats/metricbeat/config/metricbeat.yml
+    file: ./elk/beats/metricbeat/config/metricbeat.yml
